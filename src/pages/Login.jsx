@@ -36,7 +36,7 @@ const Login = () => {
 
       if (docSnap.exists()) {
         const userData = docSnap.data();
-        console.log("User data:", userData);
+        // console.log("User data:", userData);
       } else {
         console.log("No additional user data found.");
       }

@@ -1,12 +1,34 @@
 import React, { useContext } from "react";
-import { dataContext } from "../context/Wrapper";
+import { dataContext, useAuth } from "../context/Wrapper";
 import Loader from "./Loader";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase/firebase.config";
+import { signOut } from "firebase/auth";
+
 const Profile = () => {
-  let { userdata, setuserdata } = useContext(dataContext);
+  // let { userdata, setuserdata } = useContext(dataContext);
+
+  const navigate = useNavigate();
+
+  const addAccount = () => {
+    navigate("/signup");
+  };
+
+  const { userdata, setuserdata, isloading, setisloading } = useAuth();
+
+  const handleLogOut = async () => {
+    try {
+      await signOut(auth);
+
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
-      {userdata ? (
+      {userdata && !isloading ? (
         <div className="w-full py-3">
           <div className="top-prf flex items-center justify-between">
             <i className="ri-arrow-left-line text-3xl"></i>
@@ -35,7 +57,7 @@ const Profile = () => {
           </div>
 
           <div className="bottom flex flex-col px-1 mt-3 gap-5">
-            <div className="prf-item relative flex items-center w-full justify-between">
+            <div className="prf-item cursor-pointer relative flex items-center w-full justify-between">
               <div className="flex items-center gap-4">
                 <i className="ri-heart-3-line text-3xl"></i>
                 <h4 className="text-xl text-gray-700">Favourites</h4>
@@ -43,7 +65,7 @@ const Profile = () => {
               <i className="ri-arrow-right-s-line text-3xl"></i>
             </div>
 
-            <div className="prf-item relative flex items-center w-full justify-between">
+            <div className="prf-item cursor-pointer relative flex items-center w-full justify-between">
               <div className="flex items-center gap-4">
                 <i className="ri-global-line text-3xl"></i>
                 <h4 className="text-xl text-gray-700">Language</h4>
@@ -51,7 +73,7 @@ const Profile = () => {
               <i className="ri-arrow-right-s-line text-3xl"></i>
             </div>
 
-            <div className="prf-item relative flex items-center w-full justify-between">
+            <div className="prf-item cursor-pointer relative flex items-center w-full justify-between">
               <div className="flex items-center gap-4">
                 <i className="ri-calendar-line text-3xl"></i>
                 <h4 className="text-xl text-gray-700">Attendace</h4>
@@ -59,7 +81,7 @@ const Profile = () => {
               <i className="ri-arrow-right-s-line text-3xl"></i>
             </div>
 
-            <div className="prf-item relative flex items-center w-full justify-between">
+            <div className="prf-item cursor-pointer relative flex items-center w-full justify-between">
               <div className="flex items-center gap-4">
                 <i className="ri-time-line text-3xl"></i>
                 <h4 className="text-xl text-gray-700">History</h4>
@@ -67,7 +89,10 @@ const Profile = () => {
               <i className="ri-arrow-right-s-line text-3xl"></i>
             </div>
 
-            <div className="prf-item relative flex items-center w-full justify-between">
+            <div
+              onClick={addAccount}
+              className="prf-item cursor-pointer relative flex items-center w-full justify-between"
+            >
               <div className="flex items-center gap-4">
                 <i className="ri-add-line text-3xl "></i>
                 <h4 className="text-xl text-gray-700">Add Account</h4>
@@ -75,7 +100,10 @@ const Profile = () => {
               <i className="ri-arrow-right-s-line text-3xl"></i>
             </div>
 
-            <div className="prf-item relative flex items-center w-full justify-between">
+            <div
+              onClick={handleLogOut}
+              className="prf-item cursor-pointer relative flex items-center w-full justify-between"
+            >
               <div className="flex items-center gap-4">
                 <i className="ri-arrow-left-box-line text-3xl text-red-500"></i>
                 <h4 className="text-xl text-gray-700">Logout</h4>

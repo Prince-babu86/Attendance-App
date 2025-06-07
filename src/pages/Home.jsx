@@ -8,14 +8,14 @@ import Navbar from "../Components/Navbar";
 import Loader from "./Loader";
 
 const Home = () => {
-  const [isloader, setisloader] = useState(false);
+  const [isloader, setisloader , ] = useState(false);
 
-  let { userdata, setuserdata } = useContext(dataContext);
+  let { userdata, setuserdata , isloading } = useContext(dataContext);
 
   return (
     <div className="h-screen w-full">
-      {!userdata ? (
-        <Loader />
+      {isloading ? (
+       ""
       ) : (
         <div>
           <Navbar />

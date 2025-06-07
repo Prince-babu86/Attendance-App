@@ -1,13 +1,19 @@
 import { onAuthStateChanged } from "firebase/auth";
-import React, { createContext, use, useEffect, useState } from "react";
+import React, {
+  createContext,
+  use,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { auth, db } from "../firebase/firebase.config";
 import { doc, getDoc } from "firebase/firestore";
 
 export const dataContext = createContext();
 
-const Wrapper = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [userdata, setuserdata] = useState(null);
-  const [isloading, setisloading] = useState(true)
+  const [isloading, setisloading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -19,24 +25,25 @@ const Wrapper = ({ children }) => {
 
         if (docSnap.exists()) {
           const userdata = docSnap.data();
-         setisloading(false)
-          setuserdata(userdata)
+          setuserdata(userdata);
+          setisloading(false);
         } else {
           console.log("user not found");
+          setisloading(false);
         }
+      } else {
+        setisloading(false);
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-
-
-
-
-  return <dataContext.Provider value={{userdata , setuserdata , isloading}}>
-    {children}
-    </dataContext.Provider>;
+  return (
+    <dataContext.Provider value={{ userdata, setuserdata, isloading , setisloading }}>
+      {children}
+    </dataContext.Provider>
+  );
 };
 
-export default Wrapper;
+export const useAuth = () => useContext(dataContext);

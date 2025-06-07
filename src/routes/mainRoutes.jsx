@@ -12,12 +12,18 @@ const mainRoutes = () => {
     <div>
       <Routes>
         <Route path="/" element={
+       <ProtectedRoute>
         <Home/>
+       </ProtectedRoute>
         } />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/create" element={<Create />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
       </Routes>
     </div>
   );
