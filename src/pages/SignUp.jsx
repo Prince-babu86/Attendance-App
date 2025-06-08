@@ -46,6 +46,7 @@ const SignUp = () => {
         role: userdata.role,
         image:userdata.image,
         createdAt: new Date(),
+        isAdmin:false
       });
 
       setuserdata({

@@ -18,7 +18,7 @@ const App = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="  w-screen  z-[50]">
+    <div className="  w-screen ">
       {renderroutes ? (
         ""
       ) : (
@@ -26,7 +26,7 @@ const App = () => {
           <Menubar />
         </div>
       )}
-      <div className="px-3">
+      <div className="px-2">
         <MainRoutes />
       </div>
     </div>

@@ -1,19 +1,15 @@
 import { onAuthStateChanged } from "firebase/auth";
-import React, {
-  createContext,
-  use,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../firebase/firebase.config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 
 export const dataContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [userdata, setuserdata] = useState(null);
   const [isloading, setisloading] = useState(true);
+
+  const [users, setusers] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -39,8 +35,32 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const usersRef = collection(db, "users");
+        const snapshot = await getDocs(usersRef);
+        const users = snapshot.docs.map((doc) => ({
+          id: doc.id, // UID
+          ...doc.data(),
+        }));
+        setusers(users);
+        return users;
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        return [];
+      }
+    };
+
+    fetchAllUsers();
+  }, []);
+
+ 
+
   return (
-    <dataContext.Provider value={{ userdata, setuserdata, isloading , setisloading }}>
+    <dataContext.Provider
+      value={{ userdata, setuserdata, isloading, setisloading, users }}
+    >
       {children}
     </dataContext.Provider>
   );

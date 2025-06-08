@@ -6,6 +6,10 @@ import SignUp from "../pages/SignUp";
 import Create from "../pages/Createuser";
 import Profile from "../pages/Profile";
 import ProtectedRoute from "./ProtectedRoute";
+import Calender from "../pages/Calender";
+import AllUsers from "../pages/AllUsers";
+import AdminLogin from "../admin/AdminLogin";
+import AdminSignUp from "../admin/AdminSignUp";
 
 const mainRoutes = () => {
   return (
@@ -24,6 +28,26 @@ const mainRoutes = () => {
             <Profile />
           </ProtectedRoute>
         } />
+
+         <Route path="/Calender" element={
+          <ProtectedRoute>
+            <Calender />
+          </ProtectedRoute>
+        } />
+
+          <Route path="/students" element={
+          <ProtectedRoute>
+            <AllUsers />
+          </ProtectedRoute>
+        } />
+
+          <Route path="/admin-signup" element={
+          <ProtectedRoute>
+            <AdminSignUp />
+          </ProtectedRoute>
+        } />
+
+
       </Routes>
     </div>
   );

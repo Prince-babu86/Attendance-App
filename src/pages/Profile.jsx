@@ -50,11 +50,17 @@ const Profile = () => {
                 {userdata.name}
               </h1>
               <h4 className="text-md">@{userdata.username}</h4>
-              <button className="bg-red-600 text-white px-4 py-2 rounded-md mt-2 text-sm">
+             <div className="flex items-start justify-start w-full flex-col">
+               <h4 className="text-md">{userdata.role}</h4>
+              <button className="bg-red-600 text-white px-3 py-1.5 rounded-md mt-2  text-[12px]">
                 Edit Profile
               </button>
+             </div>
+             
             </div>
           </div>
+
+          
 
           <div className="bottom flex flex-col px-1 mt-3 gap-5">
             <div className="prf-item cursor-pointer relative flex items-center w-full justify-between">

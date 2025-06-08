@@ -3,7 +3,7 @@ import { dataContext, useAuth } from "../context/Wrapper";
 import { Navigate } from "react-router-dom";
 import Loader from "../pages/Loader";
 
-const ProtectedRoute = ({ children }) => {
+const AdminRoute = ({ children }) => {
   const { userdata, isloading } = useAuth();
 
   if (isloading) return <Loader />;
@@ -11,4 +11,4 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-export default ProtectedRoute;
+export default AdminRoute;

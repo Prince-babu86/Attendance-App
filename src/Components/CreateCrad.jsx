@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const CreateCrad = () => {
   return (
@@ -11,7 +12,7 @@ const CreateCrad = () => {
           </div>
 
           <div className="flex items-center flex-col border-r-2 px-4 gap-2 ">
-            <i className="ri-list-view text-3xl text-slate-800"></i>
+            <i  className="ri-list-view text-3xl text-slate-800"></i>
             <h4 className="text-sm font-semibold text-gray-800">Attendance</h4>
           </div>
 

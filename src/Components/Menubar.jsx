@@ -7,13 +7,13 @@ const Menubar = () => {
   let { userdata, setuserdata } = useContext(dataContext);
   return (
    <div>
-    {userdata ?  <div className="fixed bottom-0  w-full h-5 flex justify-between items-center py-8 px-4 shadow-2xl shadow-slate-700 z-[100] bg-white">
+    {userdata ?  <div className="fixed bottom-0  w-full h-5 flex justify-between items-center py-8 px-4 shadow-2xl shadow-slate-700 z-[1000] bg-white">
       <div className="mn-item flex flex-col items-center">
         <NavLink to={`/`} className={(e) => e.isActive ? "ri-home-fill text-3xl text-gray-800" : "ri-home-line text-3xl text-gray-800" } ></NavLink>
       </div>
 
       <div className="mn-item flex flex-col items-center">
-        <i className="ri-time-line text-3xl text-gray-800"></i>
+        <NavLink to={`/calender`} className="ri-time-line text-3xl text-gray-800"></NavLink>
       </div>
 
       <div className="mn-item  flex flex-col  items-center h-12 w-12 rounded-full bg-blue-400 justify-center">
