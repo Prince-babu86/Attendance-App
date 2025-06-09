@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <dataContext.Provider
-      value={{ userdata, setuserdata, isloading, setisloading, users }}
+      value={{ userdata, setuserdata, isloading, setisloading, users , setusers }}
     >
       {children}
     </dataContext.Provider>

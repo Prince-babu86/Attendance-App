@@ -14,53 +14,81 @@ import { db } from "../firebase/firebase.config";
 import { data } from "react-router-dom";
 
 const AllUsers = () => {
-  const { users } = useAuth();
+  const { users, setusers } = useAuth();
 
   const [todayrecord, settodayrecord] = useState([]);
 
   const [isloader, setisloader] = useState(false);
 
+  const getDayName = (dateString) => {
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayIndex = new Date(dateString).getDay();
+  return days[dayIndex];
+};
+
+
   const getToday = () => new Date().toISOString().split("T")[0];
   const markAttendanceForUser = async (user, isPresent) => {
-    const today = getToday();
-    const userRef = doc(db, "users", user.id);
-    const centralRef = doc(db, "attendance", today, "records", user.id);
+  const today = getToday(); // e.g., "2025-06-09"
+  const dayName = getDayName(today); // e.g., "Monday"
 
-    setisloader(true);
-    try {
-      // 1. Check if already marked in central attendance
-      const centralDoc = await getDoc(centralRef);
-      if (centralDoc.exists()) {
-        console.warn("⚠️ Attendance already marked for this user today.");
-        setisloader(false);
-        return;
-      }
+  const userRef = doc(db, "users", user.id);
+  const centralRef = doc(db, "attendance", today, "records", user.id);
 
-      // 2. Add to user's attendance array
-      await updateDoc(userRef, {
-        attendance: arrayUnion({
-          date: today,
-          present: isPresent,
-        }),
-      });
+  setisloader(true);
+  try {
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+    const existingAttendance = userData.attendance || [];
 
-      // 3. Add to central attendance
-      await setDoc(centralRef, {
+    const filteredAttendance = existingAttendance.filter(
+      (item) => item.date !== today
+    );
+
+    const updatedAttendance = [
+      ...filteredAttendance,
+      {
+        date: today,
+        day: dayName,
+        present: isPresent,
+      },
+    ];
+
+    await updateDoc(userRef, {
+      attendance: updatedAttendance,
+    });
+
+    await setDoc(
+      centralRef,
+      {
         userId: user.id,
         name: user.name,
         email: user.email,
         present: isPresent,
         date: today,
-      });
+        day: dayName,
+      },
+      { merge: true }
+    );
 
-      setisloader(false);
-      console.log(
-        `✔️ Marked ${user.name} as ${isPresent ? "Present" : "Absent"}`
-      );
-    } catch (error) {
-      console.error("❌ Error marking attendance:", error);
-    }
-  };
+    console.log(`✔️ Marked ${user.name} as ${isPresent ? "Present" : "Absent"} on ${dayName}`);
+  } catch (error) {
+    console.error("❌ Error marking attendance:", error);
+  } finally {
+    setisloader(false);
+  }
+};
+
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const snapshot = await getDocs(collection(db, "users"));
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setusers(data);
+    };
+
+    fetchUsers();
+  }, [markAttendanceForUser]); // Add a trigger if needed
 
   // users.map((user) => {
   //   if (user.attendance && user.attendance.length > 0) {
@@ -71,22 +99,9 @@ const AllUsers = () => {
   //   }
   // });
 
-
-  useEffect(()=>{
-
-  },[markAttendanceForUser , getToday])
-
+  useEffect(() => {}, [markAttendanceForUser, getToday, users]);
 
   const renderstudenst = users.map((user, id) => {
-    if (user.attendance && user.attendance.length > 0) {
-      let todayrecord = user.attendance.find(
-        (item) => item.date === getToday()
-      );
-      // console.log(todayrecord);
-    } else {
-      console.log(`${user.name} has no attendance`);
-    }
-
     return (
       <div
         key={id}
@@ -110,19 +125,41 @@ const AllUsers = () => {
             </p>
           </div>
           <div className="buttons flex items-center gap-2 flex-col  absolute right-3">
-
-
-            {!isloader ? <button onClick={() => markAttendanceForUser(user, false)} className="h-9 w-9 bg-red-500 rounded-full text-white">
-                {user.attendance && user.attendance.length > 0 && user.attendance.find(item => item.date === getToday()).present === false ? "X" : "A"}
-              </button>  : <button className="h-9 w-9 bg-red-500 rounded-full text-white flex items-center justify-center">
+            {!isloader ? (
+              <button
+                onClick={() => markAttendanceForUser(user, true)}
+                className="h-9 w-9 rounded-full flex items-center justify-center bg-green-500 text-white"
+              >
+                {user.attendance &&
+                user.attendance.length > 0 &&
+                user.attendance.find((item) => item.date === getToday())
+                  .present === true
+                  ? "✔"
+                  : "P"}
+              </button>
+            ) : (
+              <button className="h-9 w-9 rounded-full flex items-center justify-center bg-green-500 text-white">
                 <span className="h-4 w-4 rounded-full border-2 border-t-transparent animate-spin"></span>
-              </button>}
-             
-             {!isloader ? <button onClick={() => markAttendanceForUser(user, true)} className="h-9 w-9 bg-green-500 rounded-full text-white">
-                {user.attendance && user.attendance.length > 0 && user.attendance.find(item => item.date === getToday()).present === true ? " ✔" : "P"}
-              </button>  : <button className="h-9 w-9 bg-green-500 rounded-full text-white flex items-center justify-center">
+              </button>
+            )}
+
+            {!isloader ? (
+              <button
+                onClick={() => markAttendanceForUser(user, false)}
+                className="h-9 w-9 rounded-full flex items-center justify-center bg-red-500 text-white"
+              >
+                {user.attendance &&
+                user.attendance.length > 0 &&
+                user.attendance.find((item) => item.date === getToday())
+                  .present === false
+                  ? " X"
+                  : "A"}
+              </button>
+            ) : (
+              <button className="h-9 w-9 rounded-full flex items-center justify-center bg-red-500 text-white">
                 <span className="h-4 w-4 rounded-full border-2 border-t-transparent animate-spin"></span>
-              </button>}
+              </button>
+            )}
           </div>
         </div>
       </div>
