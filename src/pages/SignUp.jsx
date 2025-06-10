@@ -6,7 +6,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { doc, setDoc , getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 const SignUp = () => {
   const [userdata, setuserdata] = useState({
@@ -15,11 +15,11 @@ const SignUp = () => {
     name: "",
     username: "",
     role: "student",
-    image:""
+    image: "",
   });
 
   const [isloader, setisloader] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     let { name, value } = e.target;
@@ -44,9 +44,9 @@ const SignUp = () => {
         name: userdata.name,
         username: userdata.username,
         role: userdata.role,
-        image:userdata.image,
+        image: userdata.image,
         createdAt: new Date(),
-        isAdmin:false
+        isAdmin: false,
       });
 
       setuserdata({
@@ -54,11 +54,11 @@ const SignUp = () => {
         password: "",
         name: "",
         username: "",
-        image:""
+        image: "",
       });
 
       setisloader(false);
-      navigate("/")
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -74,29 +74,30 @@ const SignUp = () => {
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-      // Save new user data
-      await setDoc(userRef, {
-        uid: user.uid,
-        name: user.displayName || '',
-        email: user.email,
-        role: 'student', // or 'admin' if you want to make some Google users admins
-        createdAt: new Date()
-      });
+        // Save new user data
+        await setDoc(userRef, {
+          uid: user.uid,
+          name: user.displayName || "",
+          email: user.email,
+          role: "student", // or 'admin' if you want to make some Google users admins
+          createdAt: new Date(),
+        });
 
-      console.log('New Google user added to Firestore');
-    } else {
-      console.log('User already exists in Firestore');
-    }
+        console.log("New Google user added to Firestore");
+      } else {
+        console.log("User already exists in Firestore");
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-
-  
   return (
     <div className="w-full ">
-      <i className="ri-arrow-left-line absolute top-4 text-3xl"></i>
+      <i
+        onClick={() => navigate(-1)}
+        className="ri-arrow-left-line absolute top-4 text-3xl"
+      ></i>
       <div className="w-full py-10">
         <h1 className="text-center text-3xl font-semibold font-mono">
           Sign up
@@ -153,7 +154,7 @@ const SignUp = () => {
             />
           </div>
 
-           <div className="w-full input flex flex-col items-start gap-1">
+          <div className="w-full input flex flex-col items-start gap-1">
             <h4 className="text-sm ml-1 font-semibold font-mono">Image</h4>
             <input
               onChange={handleOnChange}
@@ -171,7 +172,12 @@ const SignUp = () => {
               <h4 className="text-sm">Save password</h4>
             </div>
 
-            <h4 className="text-sm ml-2 font-semibold ">Forgot Password? </h4>
+            <h4
+              onClick={() => navigate("/resetPassword")}
+              className="text-sm ml-2 font-semibold "
+            >
+              Forgot Password?{" "}
+            </h4>
           </div>
 
           {isloader ? (
@@ -188,7 +194,10 @@ const SignUp = () => {
         <div className="w-full mt-5">
           <h4 className="text-center text-xl">OR</h4>
           <div className="other-lg flex items-center justify-center mt-4 gap-4">
-            <div onClick={googleSignUp} className="h-16 w-16 bg-white shadow-2xl shadow-slate-500 flex items-center justify-center rounded-full">
+            <div
+              onClick={googleSignUp}
+              className="h-16 w-16 bg-white shadow-2xl shadow-slate-500 flex items-center justify-center rounded-full"
+            >
               <img
                 className="w-10"
                 src="https://i.pinimg.com/736x/c8/b8/12/c8b8129127bada9fa699aeba388b3b2b.jpg"

@@ -10,44 +10,70 @@ import Calender from "../pages/Calender";
 import AllUsers from "../pages/AllUsers";
 import AdminLogin from "../admin/AdminLogin";
 import AdminSignUp from "../admin/AdminSignUp";
+import UserAttendance from "../pages/UserAttendance";
+import ResetPassword from "../pages/ResetPassword";
 
 const mainRoutes = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={
-       <ProtectedRoute>
-        <Home/>
-       </ProtectedRoute>
-        } />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/create" element={<Create />} />
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
-         <Route path="/Calender" element={
-          <ProtectedRoute>
-            <Calender />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/Calender"
+          element={
+            <ProtectedRoute>
+              <Calender />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route path="/students" element={
-          <ProtectedRoute>
-            <AllUsers />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/students"
+          element={
+            <ProtectedRoute>
+              <AllUsers />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route path="/admin-signup" element={
-          <ProtectedRoute>
-            <AdminSignUp />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/admin-signup"
+          element={
+            <ProtectedRoute>
+              <AdminSignUp />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/my-attendance"
+          element={
+            <ProtectedRoute>
+              <UserAttendance />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route path="/resetPassword" element={<ResetPassword />} />
       </Routes>
     </div>
   );

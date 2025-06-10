@@ -147,7 +147,7 @@ const AllUsers = () => {
                 onClick={() => markAttendanceForUser(user, true)}
                 className="h-9 w-9 rounded-full flex items-center justify-center bg-green-500 text-white"
               >
-                {attendance && attendance.isPresent === true ? "✔" : "P"}
+                {attendance && attendance.present === true ? "✔" : "P"}
               </button>
             ) : (
               <button className="h-9 w-9 rounded-full flex items-center justify-center bg-green-500 text-white">
@@ -160,7 +160,7 @@ const AllUsers = () => {
                 onClick={() => markAttendanceForUser(user, false)}
                 className="h-9 w-9 rounded-full flex items-center justify-center bg-red-500 text-white"
               >
-                {attendance && attendance.isPresent === false ? "✖" : "A"}
+                {attendance && attendance.present === false ? "✖" : "A"}
               </button>
             ) : (
               <button className="h-9 w-9 rounded-full flex items-center justify-center bg-red-500 text-white">

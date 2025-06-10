@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase/firebase.config";
-import { doc, getDoc } from "firebase/firestore";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db  } from "../firebase/firebase.config";
+import { doc, getDoc  } from "firebase/firestore";
+import { signInWithEmailAndPassword , getAuth , sendPasswordResetEmail } from "firebase/auth";
 
 const Login = () => {
   const [userdata, setuserdata] = useState({
@@ -19,6 +19,8 @@ const Login = () => {
     let { name, value } = e.target;
     setuserdata({ ...userdata, [name]: value });
   };
+
+ 
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
@@ -52,9 +54,12 @@ const Login = () => {
     }
   };
 
+
+
+
   return (
     <div className="w-full  ">
-      <i className="ri-arrow-left-line absolute top-4 text-3xl"></i>
+      <i onClick={()=> navigate(-1)} className="ri-arrow-left-line absolute top-4 text-3xl"></i>
       <div className="w-full py-10 mt-20">
         <h1 className="text-center text-2xl font-semibold font-mono">
           Login your account
@@ -92,7 +97,7 @@ const Login = () => {
               <input className="ml-1" type="checkbox" />
               <h4 className="text-sm">Save password</h4>
             </div>
-            <h4 className="text-sm ml-2 font-semibold ">Forgot Password? </h4>
+            <h4 onClick={()=> navigate("/resetPassword")} className="text-sm ml-2 font-semibold ">Forgot Password? </h4>
           </div>
 
            {isloader ? (

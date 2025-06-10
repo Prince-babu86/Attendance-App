@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { dataContext, useAuth } from "../context/Wrapper";
 import Loader from "./Loader";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase.config";
 import { signOut } from "firebase/auth";
 
@@ -79,13 +79,13 @@ const Profile = () => {
               <i className="ri-arrow-right-s-line text-3xl"></i>
             </div>
 
-            <div className="prf-item cursor-pointer relative flex items-center w-full justify-between">
+            <NavLink to={`/my-attendance`} className="prf-item cursor-pointer relative flex items-center w-full justify-between">
               <div className="flex items-center gap-4">
                 <i className="ri-calendar-line text-3xl"></i>
                 <h4 className="text-xl text-gray-700">Attendace</h4>
               </div>
               <i className="ri-arrow-right-s-line text-3xl"></i>
-            </div>
+            </NavLink>
 
             <div className="prf-item cursor-pointer relative flex items-center w-full justify-between">
               <div className="flex items-center gap-4">

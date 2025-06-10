@@ -49,7 +49,9 @@ const Toady = () => {
   const renderAttendance = latestAttendance.map((att, id) => {
     return (
       <div key={id} className="att flex gap-1 items-center flex-col">
-        <h4>{att.day[0]}</h4>
+        <h4 className="text-sm font-semibold text-white h-8 w-8 flex items-center justify-center bg-pink-500 rounded-full">
+          {att.day[0]}
+        </h4>
         <h4 className="text-sm font-semibold text-white h-8 w-8 flex items-center justify-center bg-blue-500 rounded-full">
           {att.date.slice(-2)}
         </h4>
@@ -64,7 +66,7 @@ const Toady = () => {
     );
   });
 
-  console.log(todayAttendance);
+  // console.log(todayAttendance);
 
   return (
     <div className="w-full py-7 shadow-2xl   px-4 mt-4 rounded-2xl relative">
