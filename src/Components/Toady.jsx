@@ -18,7 +18,9 @@ const Toady = () => {
       let todayAtten = userdata.attendance.find(
         (item) => item.date === getToday()
       );
-      settodayAttendance(todayAtten.present);
+      todayAtten
+        ? settodayAttendance(todayAtten.present)
+        : settodayAttendance(null);
     } else {
       settodayAttendance(null);
     }
@@ -79,7 +81,9 @@ const Toady = () => {
               {month} {year}{" "}
             </h4>
             {todayAttendance === null ? (
-              <div></div>
+              <div className="absolute right-5 text-6xl top-3 uppercase h-20 w-20 flex items-center justify-center text-white rounded-2xl bg-amber-500">
+                N{" "}
+              </div>
             ) : (
               <div
                 className={`absolute right-5 text-6xl top-3 uppercase h-20 w-20 ${

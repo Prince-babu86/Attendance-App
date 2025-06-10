@@ -11,7 +11,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/firebase.config";
-import { data } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 
 const AllUsers = () => {
   const { users, setusers } = useAuth();
@@ -21,64 +21,77 @@ const AllUsers = () => {
   const [isloader, setisloader] = useState(false);
 
   const getDayName = (dateString) => {
-  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const dayIndex = new Date(dateString).getDay();
-  return days[dayIndex];
-};
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const dayIndex = new Date(dateString).getDay();
+    return days[dayIndex];
+  };
 
+
+ const navigate = useNavigate()
 
   const getToday = () => new Date().toISOString().split("T")[0];
   const markAttendanceForUser = async (user, isPresent) => {
-  const today = getToday(); // e.g., "2025-06-09"
-  const dayName = getDayName(today); // e.g., "Monday"
+    const today = getToday(); // e.g., "2025-06-09"
+    const dayName = getDayName(today); // e.g., "Monday"
 
-  const userRef = doc(db, "users", user.id);
-  const centralRef = doc(db, "attendance", today, "records", user.id);
+    const userRef = doc(db, "users", user.id);
+    const centralRef = doc(db, "attendance", today, "records", user.id);
 
-  setisloader(true);
-  try {
-    const userSnap = await getDoc(userRef);
-    const userData = userSnap.data();
-    const existingAttendance = userData.attendance || [];
+    setisloader(true);
+    try {
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+      const existingAttendance = userData.attendance || [];
 
-    const filteredAttendance = existingAttendance.filter(
-      (item) => item.date !== today
-    );
+      const filteredAttendance = existingAttendance.filter(
+        (item) => item.date !== today
+      );
 
-    const updatedAttendance = [
-      ...filteredAttendance,
-      {
-        date: today,
-        day: dayName,
-        present: isPresent,
-      },
-    ];
+      const updatedAttendance = [
+        ...filteredAttendance,
+        {
+          date: today,
+          day: dayName,
+          present: isPresent,
+        },
+      ];
 
-    await updateDoc(userRef, {
-      attendance: updatedAttendance,
-    });
+      await updateDoc(userRef, {
+        attendance: updatedAttendance,
+      });
 
-    await setDoc(
-      centralRef,
-      {
-        userId: user.id,
-        name: user.name,
-        email: user.email,
-        present: isPresent,
-        date: today,
-        day: dayName,
-      },
-      { merge: true }
-    );
+      await setDoc(
+        centralRef,
+        {
+          userId: user.id,
+          name: user.name,
+          email: user.email,
+          present: isPresent,
+          date: today,
+          day: dayName,
+        },
+        { merge: true }
+      );
 
-    console.log(`✔️ Marked ${user.name} as ${isPresent ? "Present" : "Absent"} on ${dayName}`);
-  } catch (error) {
-    console.error("❌ Error marking attendance:", error);
-  } finally {
-    setisloader(false);
-  }
-};
-
+      console.log(
+        `✔️ Marked ${user.name} as ${
+          isPresent ? "Present" : "Absent"
+        } on ${dayName}`
+      );
+    } catch (error) {
+      console.error("❌ Error marking attendance:", error);
+    } finally {
+      setisloader(false);
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -102,6 +115,10 @@ const AllUsers = () => {
   useEffect(() => {}, [markAttendanceForUser, getToday, users]);
 
   const renderstudenst = users.map((user, id) => {
+    const attendance =
+      user.attendance.length > 0 &&
+      user.attendance?.find((item) => item.date === getToday());
+
     return (
       <div
         key={id}
@@ -130,12 +147,7 @@ const AllUsers = () => {
                 onClick={() => markAttendanceForUser(user, true)}
                 className="h-9 w-9 rounded-full flex items-center justify-center bg-green-500 text-white"
               >
-                {user.attendance &&
-                user.attendance.length > 0 &&
-                user.attendance.find((item) => item.date === getToday())
-                  .present === true
-                  ? "✔"
-                  : "P"}
+                {attendance && attendance.isPresent === true ? "✔" : "P"}
               </button>
             ) : (
               <button className="h-9 w-9 rounded-full flex items-center justify-center bg-green-500 text-white">
@@ -148,12 +160,7 @@ const AllUsers = () => {
                 onClick={() => markAttendanceForUser(user, false)}
                 className="h-9 w-9 rounded-full flex items-center justify-center bg-red-500 text-white"
               >
-                {user.attendance &&
-                user.attendance.length > 0 &&
-                user.attendance.find((item) => item.date === getToday())
-                  .present === false
-                  ? " X"
-                  : "A"}
+                {attendance && attendance.isPresent === false ? "✖" : "A"}
               </button>
             ) : (
               <button className="h-9 w-9 rounded-full flex items-center justify-center bg-red-500 text-white">
@@ -172,7 +179,7 @@ const AllUsers = () => {
 
       <div className="students w-full mt-5 pb-20">
         <div className="flex items-center  w-full">
-          <i className="ri-arrow-left-line text-3xl"></i>
+          <i onClick={()=> navigate(-1)} className="ri-arrow-left-line text-3xl"></i>
           <h1 className="text-center text-2xl font-semibold font-mono ml-5">
             Students Attendance
           </h1>
