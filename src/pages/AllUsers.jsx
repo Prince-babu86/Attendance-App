@@ -115,7 +115,7 @@ const AllUsers = () => {
   useEffect(() => {}, [markAttendanceForUser, getToday, users]);
 
   const renderstudenst = users.map((user, id) => {
-    const attendance =
+    const attendance = user.attendance &&
       user.attendance.length > 0 &&
       user.attendance?.find((item) => item.date === getToday());
 
